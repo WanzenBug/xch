@@ -30,7 +30,7 @@ fn main() {
     let exit_code = match xch(path1, path2) {
         Ok(_) => 0,
         Err(e) => {
-            eprint!("Could not swap files: {}", e);
+            eprintln!("Could not swap files: {}", e);
             1
         }
     };
