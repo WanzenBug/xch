@@ -2,6 +2,7 @@
 name = "xch"
 version = "0.1.1-pre"
 dependencies = [
+ "cfg-if 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.26.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "errno 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "error-chain 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",

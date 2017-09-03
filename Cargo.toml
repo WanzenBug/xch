@@ -19,6 +19,9 @@ pre-release-replacements = [
     {file="README.md", search="xch = \"[a-z0-9\\.-]+\"", replace="xch = \"{{version}}\""},
 ]
 
+[features]
+nightly = []
+
 [lib]
 name = "libxch"
 path = "src/lib.rs"
@@ -41,6 +44,7 @@ libc = "^0.2.29"
 error-chain = "^0.10.0"
 clap = "^2.26.0"
 errno = "^0.2.3"
+cfg-if = "^0.1"
 
 [dev-dependencies]
 tempdir = "^0.3"

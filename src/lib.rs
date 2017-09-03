@@ -6,6 +6,9 @@
 #[macro_use]
 extern crate error_chain;
 
+#[macro_use]
+extern crate cfg_if;
+
 use std::path;
 
 mod platform;
