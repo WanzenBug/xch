@@ -4,7 +4,7 @@ A Rust library and CLI program to exchange the content of paths.
 
 Current release: 0.1.0
 
-*Note: Currently only runs on windows* 
+*Note: Currently only runs on windows or on Linux using nightly rust*
 
 ## CLI
 
