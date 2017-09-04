@@ -36,7 +36,7 @@ winapi = "^0.2.8"
 kernel32-sys = "^0.2.2"
 ktmw32-sys = "^0.1.0"
 
-[target."cfg(target_os = \"linux\")".dependencies]
+[target."cfg(all(target_os = \"linux\", features = \"nightly\"))".dependencies]
 syscall = "^0.2.1"
 libc = "^0.2.29"
 
