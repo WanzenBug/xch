@@ -20,7 +20,7 @@ pre-release-replacements = [
 ]
 
 [features]
-nightly = []
+nightly = ["syscall"]
 
 [lib]
 name = "libxch"
@@ -31,14 +31,16 @@ path = "src/main.rs"
 name = "xch"
 doc = false
 
-[target."cfg(windows)".dependencies]
+[target.'cfg(windows)'.dependencies]
 winapi = "^0.2.8"
 kernel32-sys = "^0.2.2"
 ktmw32-sys = "^0.1.0"
 
-[target."cfg(all(target_os = \"linux\", features = \"nightly\"))".dependencies]
-syscall = "^0.2.1"
+[target.'cfg(unix)'.dependencies]
 libc = "^0.2.29"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+syscall = { version = "^0.2.1", optional = true }
 
 [dependencies]
 error-chain = "^0.10.0"
