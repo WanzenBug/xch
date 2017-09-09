@@ -7,6 +7,7 @@ cfg_if! {
         mod linux;
         pub use self::linux::{xch, PlatformError};
     } else {
-        compile_error!("libxch not supported on this platform!");
+        mod not_implemented;
+        pub use self::not_implemented::{xch, PlatformError};
     }
 }
