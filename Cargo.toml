@@ -1,6 +1,6 @@
 [package]
 name = "xch"
-version = "0.1.2-pre"
+version = "0.1.2"
 authors = ["WanzenBug <moritz.wanzenboeck@gmail.com>"]
 license = "MIT"
 readme = "README.md"
