@@ -2,7 +2,7 @@
 
 A Rust library and CLI program to exchange the content of paths.
 
-Current release: 0.1.0
+Current release: 0.2.0
 
 *Note: Currently only runs on windows or on Linux using nightly rust*
 
@@ -27,7 +27,7 @@ old content of `first/path`).
 
 ## Crate
 
-The functionality is also available as a crate. Add `xch = "0.1.0"` to your `Cargo.toml`.
+The functionality is also available as a crate. Add `xch = "0.2.0"` to your `Cargo.toml`.
 Then you need to import the crate to your code
 ```Rust
 extern crate libxch;
