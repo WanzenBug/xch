@@ -13,12 +13,6 @@ A CLI utility and rust crate to atomically swap the content of two paths.
 categories = ["filesystem"]
 keywords = ["fs", "file", "filesystem", "cli"]
 
-pre-release-commit-message = "Release {{version}}"
-pre-release-replacements = [
-    {file="README.md", search="Current release: [a-z0-9\\.-]+", replace="Current release: {{version}}"},
-    {file="README.md", search="xch = \"[a-z0-9\\.-]+\"", replace="xch = \"{{version}}\""},
-]
-
 [features]
 nightly = ["syscall"]
 
@@ -51,3 +45,11 @@ uuid = { version = "^0.5", features = ["v4"] }
 
 [dev-dependencies]
 tempdir = "^0.3"
+
+[package.metadata.release]
+pre-release-commit-message = "Release {{version}}"
+pre-release-replacements = [
+    {file="README.md", search="Current release: [a-z0-9\\.-]+", replace="Current release: {{version}}"},
+    {file="README.md", search="xch = \"[a-z0-9\\.-]+\"", replace="xch = \"{{version}}\""},
+    {file="CHANGELOG.md", search="## \\[Unreleased\\] -- [0-9]+-[0-9]+-[0-9]+", replace="## [Unreleased] -- {{date}}\n\n## [{{version}}] -- {{date}}"},
+]
