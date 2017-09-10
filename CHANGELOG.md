@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - Print new line at end of error messages
  - Add non-atomic generic fallback
  - Add flag to program to call non-atomic fallback 
+### Changed
+ - Run tests on non-atomic versions
 
 ## [0.1.0] -- 2017-09-02
 ### Added
