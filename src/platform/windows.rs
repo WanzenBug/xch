@@ -203,7 +203,7 @@ fn get_last_error() -> PlatformError {
 
     let flags = winapi::FORMAT_MESSAGE_ALLOCATE_BUFFER | winapi::FORMAT_MESSAGE_FROM_SYSTEM | winapi::FORMAT_MESSAGE_IGNORE_INSERTS;
     let langid = winapi::LANG_USER_DEFAULT as u32;
-    /// This variable will store the location for the system allocated buffer
+    // This variable will store the location for the system allocated buffer
     let mut ptr: winapi::HLOCAL = null_mut();
     let size = unsafe {
         kernel32::FormatMessageW(flags, null_mut(), error, langid, mem::transmute::<_, *mut u16>(&mut ptr), 0, null_mut())

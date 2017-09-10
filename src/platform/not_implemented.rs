@@ -3,7 +3,7 @@ use std::path;
 use std::fmt;
 use std::error;
 
-pub fn xch<A: AsRef<path::Path>, B: AsRef<path::Path>>(path1: A, path2: B) -> Result<()> {
+pub fn xch<A: AsRef<path::Path>, B: AsRef<path::Path>>(_path1: A, _path2: B) -> Result<()> {
     Err(ErrorKind::NotImplemented.into())
 }
 

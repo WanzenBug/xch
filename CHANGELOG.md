@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
  - Linux support on nightly
  - Print new line at end of error messages
+ - Add non-atomic generic fallback
+ - Add flag to program to call non-atomic fallback 
 
 ## [0.1.0] -- 2017-09-02
 ### Added
