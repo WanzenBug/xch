@@ -4,6 +4,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] -- 2017-09-10
+### Changed
+ - Updated dependencies
+ - Use the RENAME_EXCHANGE constant provided by newer libc version
 
 ## [0.2.1] -- 2017-09-10
 ### Added

@@ -11,7 +11,7 @@ use ::error::{Result};
 
 pub fn xch<A: AsRef<path::Path>, B: AsRef<path::Path>>(path1: A, path2: B) -> Result<()> {
     use std::os::unix::ffi::OsStrExt;
-    use std::iter::once;
+
     let path1 = path1.as_ref().as_os_str().as_bytes();
     let path2 = path2.as_ref().as_os_str().as_bytes();
     let mut path1_vec = Vec::with_capacity(path1.len() + 1);
@@ -20,7 +20,8 @@ pub fn xch<A: AsRef<path::Path>, B: AsRef<path::Path>>(path1: A, path2: B) -> Re
     path1_vec.push(0);
     path2_vec.extend_from_slice(path2);
     path2_vec.push(0);
-    let flag = 2; // libc::RENAME_EXCHANGE not available
+    let flag = libc::RENAME_EXCHANGE as usize;
+
     let ret = unsafe {
         let cwd = libc::AT_FDCWD as usize;
         let path1_ptr = mem::transmute::<_, usize>(path1_vec.as_ptr());
