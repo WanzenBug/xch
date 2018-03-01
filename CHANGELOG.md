@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
  - Updated dependencies
  - Use the RENAME_EXCHANGE constant provided by newer libc version
+ - Removed error-chain dependency, instead use custom error type
 
 ## [0.2.1] -- 2017-09-10
 ### Added

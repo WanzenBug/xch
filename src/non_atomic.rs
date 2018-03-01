@@ -116,7 +116,7 @@ impl<'a> Transaction<'a> {
             let rollback_res = self.rollback();
             if let Err(e) = rollback_res {
                 let rename_err: Error = rename_err.into();
-                Err(rename_err.chain_err(|| e))
+                Err(Error::ChainError(Box::new(e), Box::new(rename_err)))
             } else {
                 Err(rename_err.into())
             }

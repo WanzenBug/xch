@@ -25,7 +25,7 @@ fn main() {
         .arg(Arg::with_name("non-atomic")
             .long("non-atomic")
             .short("n")
-            .help("Use non atomic exchange if atomic is not available"))
+            .help("Use non atomic exchange if atomic is not available/successful"))
         .get_matches();
 
     let path1 = matches.value_of("PATH1").expect("clap should have covered this");

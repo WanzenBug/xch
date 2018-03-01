@@ -1,10 +1,10 @@
-use error::{Result, ErrorKind};
+use error::{Result, Error};
 use std::path;
 use std::fmt;
 use std::error;
 
 pub fn xch<A: AsRef<path::Path>, B: AsRef<path::Path>>(_path1: A, _path2: B) -> Result<()> {
-    Err(ErrorKind::NotImplemented.into())
+    Err(Error::NotImplemented)
 }
 
 #[derive(Debug)]
