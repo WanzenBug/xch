@@ -3,34 +3,87 @@
 // Licensed under the MIT License <LICENSE or http://opensource.org/licenses/MIT>.
 // This file may not be copied, modified, or distributed except according to those terms.
 
-extern crate clap;
 extern crate libxch;
 
-use clap::{Arg, App};
+use std::{
+    env,
+    io
+};
+
+use libxch::{xch, xch_non_atomic};
+use std::io::Write;
+
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 const AUTHORS: &'static str = env!("CARGO_PKG_AUTHORS");
-use libxch::{xch, xch_non_atomic};
+const PROG_INFO: &'static str = concat!("xch", env!("CARGO_PKG_VERSION"), "\n", env!("CARGO_PKG_AUTHORS"), "\nA utility to quickly swap the content of files or directories.\n");
+
+const USAGE: &'static str = "USAGE:
+    xch [FLAGS] [--] <PATH1> <PATH2>
+
+FLAGS:
+    -h, --help          Prints help information
+    -n, --non-atomic    Use non atomic exchange if atomic is not available
+    -V, --version       Prints version information
+
+ARGS:
+    <PATH1>    One path to exchange
+    <PATH2>    The other path to exchange";
 
 fn main() {
-    let matches = App::new("xch")
-        .version(VERSION)
-        .author(AUTHORS)
-        .about("A utility to quickly swap the content of files or directories.")
-        .arg(Arg::with_name("PATH1")
-            .help("One path to exchange")
-            .required(true))
-        .arg(Arg::with_name("PATH2")
-            .help("The other path to exchange")
-            .required(true))
-        .arg(Arg::with_name("non-atomic")
-            .long("non-atomic")
-            .short("n")
-            .help("Use non atomic exchange if atomic is not available/successful"))
-        .get_matches();
+    let mut args = env::args_os().skip(1);
+    let mut show_help = false;
+    let mut show_version = false;
+    let mut non_atomic = false;
+    let mut treat_as_path = false;
+    let mut paths = Vec::new();
 
-    let path1 = matches.value_of("PATH1").expect("clap should have covered this");
-    let path2 = matches.value_of("PATH2").expect("clap should have covered this");
-    let non_atomic = matches.is_present("non-atomic");
+    while let Some(arg) = args.next() {
+        if !treat_as_path && (arg == "-h" || arg == "--help") {
+            show_help = true;
+            continue;
+        }
+        if !treat_as_path && (arg == "-V" || arg == "--version") {
+            show_version = true;
+            continue;
+        }
+        if !treat_as_path && (arg == "-n" || arg == "--non-atomic") {
+            non_atomic = true;
+            continue;
+        }
+        if !treat_as_path && arg == "--" {
+            treat_as_path = true;
+            continue;
+        }
+
+        paths.push(arg);
+    }
+
+    if show_help {
+        println!("{}", PROG_INFO);
+        println!("{}", USAGE);
+        return;
+    }
+
+    if show_version {
+        println!("xch {}", VERSION);
+        return;
+    }
+
+    if paths.len() < 2 {
+        eprintln!("error: need exactly two path to exchange, got {} instead", paths.len());
+        println!("{}", USAGE);
+        ::std::process::exit(1);
+    }
+
+    if paths.len() > 2 {
+        eprintln!("error: need exactly two path to exchange, got {} instead", paths.len());
+        eprintln!("-> first extra argument was: {:?}", paths[2]);
+        println!("{}", USAGE);
+        ::std::process::exit(1);
+    }
+
+    let path1 = paths.remove(0);
+    let path2 = paths.remove(0);
 
     let xch_result = if non_atomic {
         xch_non_atomic(path1, path2)
@@ -40,7 +93,7 @@ fn main() {
     let exit_code = match xch_result {
         Ok(_) => 0,
         Err(e) => {
-            eprintln!("Could not swap files: {}", e);
+            eprintln!("error: could not swap files: {}", e);
             1
         }
     };

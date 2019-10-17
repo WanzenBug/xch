@@ -1,4 +1,4 @@
-// Copyright 2017 Moritz Wanzenböck.
+// Copyright 2017-2019 Moritz Wanzenböck.
 //
 // Licensed under the MIT License <LICENSE or http://opensource.org/licenses/MIT>.
 // This file may not be copied, modified, or distributed except according to those terms.
