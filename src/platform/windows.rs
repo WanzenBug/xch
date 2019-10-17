@@ -1,16 +1,19 @@
 extern crate kernel32;
-extern crate winapi;
 extern crate ktmw32;
+extern crate winapi;
 
-use std::path;
-use std::fs;
-use std::ffi::{OsStr, OsString};
-use std::ptr::null_mut;
-use std::error;
-use std::fmt;
-use std::mem;
-use std::slice;
-use ::error::{Error, Result};
+use std::{
+    ffi::{OsStr, OsString},
+    error,
+    fmt,
+    fs,
+    mem,
+    path,
+    ptr::null_mut,
+    slice
+};
+
+use crate::error::{Error, Result};
 
 /// Exchange two paths on a Windows machine.
 ///

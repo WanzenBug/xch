@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - Updated dependencies
  - Use the RENAME_EXCHANGE constant provided by newer libc version
  - Removed error-chain dependency, instead use custom error type
+ - Remove cfg_if dependency, replace with cfg_attr
+ - Remove clap, instead use custom command line parsing
+ - Update to 2018 edition
 
 ## [0.2.1] -- 2017-09-10
 ### Added
