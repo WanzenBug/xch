@@ -15,7 +15,7 @@ use std::io::Write;
 
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 const AUTHORS: &'static str = env!("CARGO_PKG_AUTHORS");
-const PROG_INFO: &'static str = concat!("xch", env!("CARGO_PKG_VERSION"), "\n", env!("CARGO_PKG_AUTHORS"), "\nA utility to quickly swap the content of files or directories.\n");
+const PROG_INFO: &'static str = concat!("xch ", env!("CARGO_PKG_VERSION"), "\n", env!("CARGO_PKG_AUTHORS"), "\nA utility to quickly swap the content of files or directories.\n");
 
 const USAGE: &'static str = "USAGE:
     xch [FLAGS] [--] <PATH1> <PATH2>
