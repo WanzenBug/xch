@@ -8,16 +8,14 @@
 //! When possible, this is done in an atomic fashion, so that only the full changes are observable.
 //!
 //! Currently, atomic exchange is only supported on Windows and Linux.
-#[macro_use]
-extern crate cfg_if;
 
 use std::path;
+
+pub use error::Error;
 
 mod platform;
 mod non_atomic;
 mod error;
-
-pub use error::Error;
 
 /// Exchange the content of the objects pointed to by the two paths.
 ///
@@ -34,9 +32,10 @@ pub fn xch<A: AsRef<path::Path>, B: AsRef<path::Path>>(path1: A, path2: B) -> er
 /// **This operation may not be atomic**. If available, it will try to use the platform specific,
 /// atomic operations. If they are not implemented, this will fallback to a non-atomic exchange.
 pub fn xch_non_atomic<A: AsRef<path::Path>, B: AsRef<path::Path>>(path1: A, path2: B) -> error::Result<()> {
-    let res: Result<_, _> = platform::xch(&path1, &path2);
-    res.or_else(|e1|
+    let res = platform::xch(&path1, &path2);
+    if let Err(error::Error::NotImplemented) = res {
         non_atomic::xch(&path1, &path2)
-            .map_err(|e2| Error::ChainError(Box::new(e2), Box::new(e1)))
-    )
+    } else {
+        res
+    }
 }
