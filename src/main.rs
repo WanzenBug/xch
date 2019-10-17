@@ -5,16 +5,11 @@
 
 extern crate libxch;
 
-use std::{
-    env,
-    io
-};
+use std::env;
 
 use libxch::{xch, xch_non_atomic};
-use std::io::Write;
 
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
-const AUTHORS: &'static str = env!("CARGO_PKG_AUTHORS");
 const PROG_INFO: &'static str = concat!("xch ", env!("CARGO_PKG_VERSION"), "\n", env!("CARGO_PKG_AUTHORS"), "\nA utility to quickly swap the content of files or directories.\n");
 
 const USAGE: &'static str = "USAGE:

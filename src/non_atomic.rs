@@ -1,10 +1,12 @@
-extern crate uuid;
+use std::{
+    fs,
+    io,
+    path,
+};
 
-use std::io;
-use std::fs;
-use std::path;
+use uuid;
 
-use error::{Result, Error};
+use crate::error::{Error, Result};
 
 /// Exchange files/directories by non-atomic renames.
 ///

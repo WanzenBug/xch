@@ -1,13 +1,14 @@
-extern crate errno;
-extern crate syscall;
-extern crate libc;
+use errno;
+use libc;
+use std::{
+    error,
+    fmt,
+    mem,
+    path,
+};
+use syscall;
 
-use std::path;
-use std::fmt;
-use std::error;
-use std::mem;
-
-use ::error::{Result};
+use crate::error::Result;
 
 pub fn xch<A: AsRef<path::Path>, B: AsRef<path::Path>>(path1: A, path2: B) -> Result<()> {
     use std::os::unix::ffi::OsStrExt;

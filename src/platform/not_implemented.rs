@@ -1,7 +1,9 @@
-use error::{Result, Error};
-use std::path;
-use std::fmt;
-use std::error;
+use crate::error::{Error, Result};
+use std::{
+    error,
+    fmt,
+    path,
+};
 
 pub fn xch<A: AsRef<path::Path>, B: AsRef<path::Path>>(_path1: A, _path2: B) -> Result<()> {
     Err(Error::NotImplemented)

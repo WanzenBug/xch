@@ -46,7 +46,7 @@ On other platforms such as any BSD or Linux using the stable toolchain, you alwa
 The functionality is also available as a crate. Add `xch = "0.2.1"` to your `Cargo.toml`.
 Then you need to import the crate to your code
 ```Rust
-extern crate libxch;
+use libxch;
 ```
 Then you can start exchanging the content of files
 ```Rust

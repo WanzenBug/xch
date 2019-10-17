@@ -6,6 +6,7 @@ license = "MIT"
 readme = "README.md"
 repository = "https://github.com/WanzenBug/xch"
 documentation = "https://docs.rs/xch"
+edition = "2018"
 description = """
 A CLI utility and rust crate to atomically swap the content of two paths.
 """
@@ -14,7 +15,7 @@ categories = ["filesystem"]
 keywords = ["fs", "file", "filesystem", "cli"]
 
 [features]
-nightly = ["syscall"]
+nightly = ["syscall", "errno"]
 
 [lib]
 name = "libxch"
@@ -35,10 +36,9 @@ libc = "^0.2.37"
 
 [target.'cfg(target_os = "linux")'.dependencies]
 syscall = { version = "^0.2.1", optional = true }
+errno = {version = "^0.2.3", optional = true }
 
 [dependencies]
-errno = "^0.2.3"
-clap = "^2.26.0"
 uuid = { version = "^0.5", features = ["v4"] }
 
 [dev-dependencies]
