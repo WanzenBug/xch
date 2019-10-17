@@ -29,7 +29,7 @@ pub fn xch<A: AsRef<path::Path>, B: AsRef<path::Path>>(path1: A, path2: B) -> Re
             path2.parent()
                 .ok_or_else::<Error, _>(|| format!("Could not find parent directory for {}", path2.display()).into())
         )?;
-    let unique_name = format!("{}", uuid::Uuid::new_v4().hyphenated());
+    let unique_name = format!("{}", uuid::Uuid::new_v4().to_hyphenated());
     let temp_name = one_parent.join(unique_name);
 
     let mut transaction = Transaction::new();

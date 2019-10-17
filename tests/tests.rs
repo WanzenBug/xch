@@ -1,5 +1,5 @@
-extern crate tempdir;
-extern crate libxch;
+use tempdir;
+use libxch;
 mod util;
 
 #[test]

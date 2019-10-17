@@ -1,6 +1,4 @@
-extern crate kernel32;
-extern crate ktmw32;
-extern crate winapi;
+use winapi;
 
 use std::{
     ffi::{OsStr, OsString},
@@ -52,15 +50,15 @@ pub fn xch<A: AsRef<path::Path>, B: AsRef<path::Path>>(file1: A, file2: B) -> Re
 
 /// Represents a windows transaction handle.
 #[derive(Debug)]
-struct Transaction(winapi::HANDLE);
+struct Transaction(winapi::shared::ntdef::HANDLE);
 
 impl Transaction {
     /// Create a new transaction.
     fn new() -> Result<Transaction> {
         let handle = unsafe {
-            ktmw32::CreateTransaction(null_mut(), null_mut(), 0, 0, 0, 0, null_mut())
+            winapi::um::ktmw32::CreateTransaction(null_mut(), null_mut(), 0, 0, 0, 0, null_mut())
         };
-        if handle == winapi::INVALID_HANDLE_VALUE {
+        if handle == winapi::um::handleapi::INVALID_HANDLE_VALUE {
             Err("Could not get transaction".into())
         } else {
             Ok(Transaction(handle))
@@ -72,7 +70,7 @@ impl Transaction {
     /// On failure, the transaction will be rolled back and an error is returned.
     /// On success, returns nothing
     fn commit(self) -> Result<()> {
-        let res = as_win_error(unsafe { ktmw32::CommitTransaction(self.0) });
+        let res = as_win_error(unsafe { winapi::um::ktmw32::CommitTransaction(self.0) });
         if let Err(e) = res {
             self.rollback()?;
             Err(e)
@@ -87,7 +85,7 @@ impl Transaction {
     /// the transaction again.
     fn rollback(self) -> Result<()> {
         as_win_error(unsafe {
-            ktmw32::RollbackTransaction(self.0)
+            winapi::um::ktmw32::RollbackTransaction(self.0)
         })
     }
 
@@ -102,7 +100,7 @@ impl Transaction {
 
         let handle = self.0;
         self.ok_or_rollback(as_win_error(unsafe {
-            kernel32::MoveFileTransactedW(from_encoded.as_ptr(), to_encoded.as_ptr(), None, null_mut(), 0, handle)
+            winapi::um::winbase::MoveFileTransactedW(from_encoded.as_ptr(), to_encoded.as_ptr(), None, null_mut(), 0, handle)
         }))
     }
 
@@ -129,7 +127,7 @@ impl Transaction {
 
         let handle = self.0;
         self.ok_or_rollback(as_win_error(unsafe {
-            kernel32::DeleteFileTransactedW(from_encoded.as_ptr(), handle)
+            winapi::um::winbase::DeleteFileTransactedW(from_encoded.as_ptr(), handle)
         }))
     }
 }
@@ -144,17 +142,17 @@ impl TempFile {
     /// Create a new temporary file in the specified directory.
     fn new<A: AsRef<path::Path>>(dir_path: A) -> Result<Self> {
         use std::os::windows::ffi::OsStringExt;
-        let mut out = Vec::with_capacity(winapi::MAX_PATH);
+        let mut out = Vec::with_capacity(winapi::shared::minwindef::MAX_PATH);
         let pre = to_wide_str("tmp");
         let dir = to_wide_str(dir_path.as_ref());
         if unsafe {
-            kernel32::GetTempFileNameW(dir.as_ptr(), pre.as_ptr(), 0, out.as_mut_ptr())
+            winapi::um::fileapi::GetTempFileNameW(dir.as_ptr(), pre.as_ptr(), 0, out.as_mut_ptr())
         } != 0 {
-            unsafe { out.set_len(winapi::MAX_PATH) };
+            unsafe { out.set_len(winapi::shared::minwindef::MAX_PATH) };
             let n = out.iter().position(|&x| x == 0).ok_or_else(|| "Could not create tempfile")?;
             Ok(TempFile(OsString::from_wide(&out[..n]).into()))
         } else {
-            let error = unsafe { kernel32::GetLastError() };
+            let error = unsafe { winapi::um::errhandlingapi::GetLastError() };
             Err(format!("Got Windows error code {:x}", error).into())
         }
     }
@@ -188,8 +186,8 @@ fn to_wide_str<O: AsRef<OsStr>>(s: O) -> Vec<u16> {
 ///
 /// If the parameter equals the Windows FALSE constant, this will call `get_last_error()` to get
 /// a meaningful error message from the system.
-fn as_win_error(res: winapi::BOOL) -> Result<()> {
-    if res != winapi::FALSE {
+fn as_win_error(res: winapi::shared::minwindef::BOOL) -> Result<()> {
+    if res != winapi::shared::minwindef::FALSE {
         Ok(())
     } else {
         Err(get_last_error().into())
@@ -202,14 +200,14 @@ fn as_win_error(res: winapi::BOOL) -> Result<()> {
 /// PlatformError with a Windows specific error message.
 fn get_last_error() -> PlatformError {
     use std::os::windows::ffi::OsStringExt;
-    let error = unsafe { kernel32::GetLastError() };
+    let error = unsafe { winapi::um::errhandlingapi::GetLastError() };
 
-    let flags = winapi::FORMAT_MESSAGE_ALLOCATE_BUFFER | winapi::FORMAT_MESSAGE_FROM_SYSTEM | winapi::FORMAT_MESSAGE_IGNORE_INSERTS;
-    let langid = winapi::LANG_USER_DEFAULT as u32;
+    let flags = winapi::um::winbase::FORMAT_MESSAGE_ALLOCATE_BUFFER | winapi::um::winbase::FORMAT_MESSAGE_FROM_SYSTEM | winapi::um::winbase::FORMAT_MESSAGE_IGNORE_INSERTS;
+    let langid = winapi::um::winnt::LANG_USER_DEFAULT as u32;
     // This variable will store the location for the system allocated buffer
-    let mut ptr: winapi::HLOCAL = null_mut();
+    let mut ptr: winapi::shared::minwindef::HLOCAL = null_mut();
     let size = unsafe {
-        kernel32::FormatMessageW(flags, null_mut(), error, langid, mem::transmute::<_, *mut u16>(&mut ptr), 0, null_mut())
+        winapi::um::winbase::FormatMessageW(flags, null_mut(), error, langid, mem::transmute::<_, *mut u16>(&mut ptr), 0, null_mut())
     };
     let msg = if size == 0 {
         "Unknown Error".into()
@@ -219,7 +217,7 @@ fn get_last_error() -> PlatformError {
         };
         let msg = OsString::from_wide(slice).to_string_lossy().to_string();
         unsafe {
-            kernel32::LocalFree(ptr)
+            winapi::um::winbase::LocalFree(ptr)
         };
         msg
     };
@@ -230,7 +228,7 @@ fn get_last_error() -> PlatformError {
 ///
 /// This stores the error code as well as an error message generated by Windows.
 #[derive(Debug)]
-pub struct PlatformError(winapi::DWORD, String);
+pub struct PlatformError(winapi::shared::minwindef::DWORD, String);
 
 impl fmt::Display for PlatformError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
