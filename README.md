@@ -3,7 +3,7 @@
 A Rust library and CLI program to exchange the content of paths. If possible, this try
 to change contents atomically.
 
-Current release: 1.0.0
+Current release: 1.1.0
 
 ***Note**: Currently only supports atomic exchange on Windows or on Linux using nightly rust*
 
@@ -48,7 +48,7 @@ On other platforms such as any BSD or MacOS, you always need to specify
 
 ## Crate
 
-The functionality is also available as a crate. Add `xch = "1.0.0"` to your `Cargo.toml`.
+The functionality is also available as a crate. Add `xch = "1.1.0"` to your `Cargo.toml`.
 Then you need to import the crate to your code
 ```Rust
 use libxch;
