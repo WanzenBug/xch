@@ -42,7 +42,7 @@ errno = "^0.2.4"
 cc = "1.0"
 
 [dependencies]
-uuid = { version = "^0.7", features = ["v4"] }
+uuid = { version = "^0.8", features = ["v4"] }
 
 [dev-dependencies]
 tempdir = "^0.3"
