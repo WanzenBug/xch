@@ -35,11 +35,16 @@ This not only works for files but also for directories or one file and a directo
 
 By default all changes are made atomically, you can never observe one change without the other (e.g. 
 if `first/path` points to the old content of `second/path`, `second/path` also points to the
-old content of `first/path`). This only works on Windows and when using the `nightly` feature 
-on Linux (`cargo install xch --features nightly` when using the nightly toolchain).
+old content of `first/path`). This only works on Windows and Linux.
 
-On other platforms such as any BSD or Linux using the stable toolchain, you always need to specify
+On other platforms such as any BSD or MacOS, you always need to specify
 `--non-atomic` to get results.
+
+| platform | atomic xch         | non-atomic xch     | 
+|----------|--------------------|--------------------|
+| windows  | :heavy_check_mark: | :heavy_check_mark: |
+| linux    | :heavy_check_mark: | :heavy_check_mark: |
+| others   | :x:                | :heavy_check_mark: |
 
 ## Crate
 
@@ -69,3 +74,5 @@ Here are some missing features that will hopefully be added in the future:
 - MacOS atomic exchange using the `ExchangeData` syscall.
 - Better error messages
 - More options.
+
+#### Please feel free to open an issue if you have a specific request

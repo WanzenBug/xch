@@ -10,6 +10,7 @@ edition = "2018"
 description = """
 A CLI utility and rust crate to atomically swap the content of two paths.
 """
+build = "build.rs"
 
 categories = ["filesystem"]
 keywords = ["fs", "file", "filesystem", "cli"]
@@ -22,9 +23,6 @@ pre-release-replacements = [
     {file="CHANGELOG.md", search="## \\[Unreleased\\] -- [0-9]+-[0-9]+-[0-9]+", replace="## [Unreleased] -- {{date}}\n\n## [{{version}}] -- {{date}}"},
 ]
 
-[features]
-nightly = ["syscall", "errno"]
-
 [lib]
 name = "libxch"
 path = "src/lib.rs"
@@ -34,15 +32,14 @@ path = "src/main.rs"
 name = "xch"
 doc = false
 
-[target.'cfg(windows)'.dependencies]
+[target.'cfg(target_os = "windows")'.dependencies]
 winapi = { version = "^0.3.8", features = ["handleapi", "ktmw32"] }
 
-[target.'cfg(unix)'.dependencies]
-libc = "^0.2.37"
-
 [target.'cfg(target_os = "linux")'.dependencies]
-syscall = { version = "^0.2.1", optional = true }
-errno = {version = "^0.2.3", optional = true }
+errno = "^0.2.4"
+
+[target.'cfg(target_os = "linux")'.build-dependencies]
+cc = "1.0"
 
 [dependencies]
 uuid = { version = "^0.7", features = ["v4"] }

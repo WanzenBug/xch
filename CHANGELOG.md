@@ -4,6 +4,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] -- 2019-10-17
+### Added
+- Support for atomic exchange on stable linux
 
 ## [1.0.0] -- 2019-10-17
 ### Changed

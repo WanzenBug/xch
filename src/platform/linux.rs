@@ -1,38 +1,31 @@
 use errno;
-use libc;
 use std::{
     error,
     fmt,
-    mem,
     path,
+    ffi,
+    os,
 };
-use syscall;
 
 use crate::error::Result;
+extern {
+    fn linux_xch_syscall(path1: *const os::raw::c_char, path2: *const os::raw::c_char) -> os::raw::c_long;
+}
 
 pub fn xch<A: AsRef<path::Path>, B: AsRef<path::Path>>(path1: A, path2: B) -> Result<()> {
     use std::os::unix::ffi::OsStrExt;
 
     let path1 = path1.as_ref().as_os_str().as_bytes();
     let path2 = path2.as_ref().as_os_str().as_bytes();
-    let mut path1_vec = Vec::with_capacity(path1.len() + 1);
-    let mut path2_vec = Vec::with_capacity(path2.len() + 1);
-    path1_vec.extend_from_slice(path1);
-    path1_vec.push(0);
-    path2_vec.extend_from_slice(path2);
-    path2_vec.push(0);
-    let flag = libc::RENAME_EXCHANGE as usize;
-
+    let path1 = ffi::CString::new(path1).expect("path cannot contain null byte");
+    let path2 = ffi::CString::new(path2).expect("path cannot contain null byte");
     let ret = unsafe {
-        let cwd = libc::AT_FDCWD as usize;
-        let path1_ptr = mem::transmute::<_, usize>(path1_vec.as_ptr());
-        let path2_ptr = mem::transmute::<_, usize>(path2_vec.as_ptr());
-        syscall::syscall5(syscall::nr::RENAMEAT2, cwd, path1_ptr, cwd, path2_ptr, flag)
+        linux_xch_syscall(path1.as_ptr(), path2.as_ptr())
     };
     if ret == 0 {
         Ok(())
     } else {
-        Err(PlatformError(errno::Errno(((usize::max_value() - ret) + 1) as i32)).into())
+        Err(PlatformError(errno::errno()).into())
     }
 }
 

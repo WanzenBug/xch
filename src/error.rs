@@ -19,7 +19,7 @@ impl ::std::error::Error for Error {
         }
     }
 
-    fn cause(&self) -> Option<&dyn ::std::error::Error> {
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
         match *self {
             Error::Fs(ref e) => Some(e),
             Error::PlatformError(ref e) => Some(e),
